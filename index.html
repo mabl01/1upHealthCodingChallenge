@@ -9,42 +9,10 @@
     <br><br>
     <input type="text" placeholder="code" id="codeInput">
     <button type="submit" id="codeSubmit">get auth tokens</button>
-    <p id="codeEcho">Code Echo: </p>
+    <!-- <p id="codeEcho">Code Echo: </p> -->
 </body>
 
-<script>
-    function acceptID(id) {
-        var toSend = JSON.stringify({id: id})
-        console.log(toSend)
-        $.ajax({
-            url: 'http://localhost:3000/newUserCode',
-            type: 'POST',
-            data: toSend,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: (data, textStatus, jqXHR) => {
-                console.log(data)
-                console.log(data.code)
-                console.log("New code generated");
-                document.querySelector('#idEcho').append(data.code);
-                // if (typeof data.redirect == 'string') {
-                //     window.location = data.redirect;
-                // }
-            }
-        })
-    }
-
-    function acceptCode(code) {
-        document.querySelector('#codeEcho').append(code);
-        var toSend = JSON.stringify({code: code})
-        console.log(toSend)
-        let xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "http://localhost:3000/getAuthTokens", true);
-        xhttp.setRequestHeader('Content-Type', 'application/json');
-        xhttp.send(toSend);
-    }
-
-    
+<script> 
 
     document.getElementById('idSubmit').onclick = function() {
         console.log("id submit");
@@ -67,7 +35,6 @@
 
     document.getElementById('codeSubmit').onclick = function() {
         console.log("code submit");
-        // document.querySelector('#codeEcho').innerHTML = "?";
         var toSend = JSON.stringify({code: document.querySelector('#codeInput').value})
         console.log(toSend)
         $.ajax({
@@ -83,11 +50,6 @@
                 }
             }
         })
-
-        // let xhttp = new XMLHttpRequest();
-        // xhttp.open("POST", "http://localhost:3000/getAuthTokens", true);
-        // xhttp.setRequestHeader('Content-Type', 'application/json');
-        // xhttp.send(toSend);
     }
 
 </script>

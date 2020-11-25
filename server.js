@@ -1,13 +1,3 @@
-// TODO: 
-// take usercode to get auth code
-// plug authcode into cerner link (id 4707)
-// log in with given test creds (wilmasmart, Cerner01)
-// use the $everything query to get back a large json
-// format the json for presentation to humans
-
-// {"success":true,"code":"59c1057755531429844cead0039e45540045489b","oneup_user_id":123342385,"app_user_id":"test","active":true}
-// {"access_token":"ec25098118a6e15b9bab613bc6bf1f566b1ac754","token_type":"Bearer","expires_in":3599,"refresh_token":"a09e7b8bbf7574d48c294f73f3ad739b6db6f827","scope":"user/*.*"}
-
 const express = require("express");
 const http = require("http");
 const request = require("request");
@@ -44,9 +34,6 @@ app.post("/newUserCode", function(req, res) {
         } else {
             const parsedResult = JSON.parse(result);
             res.send(parsedResult)
-            console.log(result);
-            // const proxyURL = "https://cors-anywhere.herokuapp.com/";
-            // res.redirect(proxyURL + "http://google.com");
         }
     })
 })
@@ -58,7 +45,6 @@ app.post("/getAuthTokens", function(req, res) {
         if (error) {
             console.log(error)
         } else {
-            // TODO: redirect to login page with pre-created url using Cerner's 4707 id and the given auth token
             console.log(result);
             const parsedResult = JSON.parse(result);
             if (parsedResult.access_token !== undefined) {
@@ -69,13 +55,6 @@ app.post("/getAuthTokens", function(req, res) {
             } else {
                 res.send({redirectURL: "https://google.com"});
             }
-            // const proxyURL = "https://cors-anywhere.herokuapp.com/";
-            // res.writeHead(301, 
-            //     {Location: proxyURL+"https://www.google.com"}
-            // );
-            // res.end();
-
-            // res.redirect(proxyURL + "https://google.com");
         }
     })
 })
