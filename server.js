@@ -45,7 +45,6 @@ app.post("/getAuthTokens", function(req, res) {
         if (error) {
             console.log(error)
         } else {
-            console.log(result);
             const parsedResult = JSON.parse(result);
             if (parsedResult.access_token !== undefined) {
                 const cernerCode = 4707;

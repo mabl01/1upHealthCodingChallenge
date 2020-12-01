@@ -14,7 +14,7 @@ The latter is index.html and is responsible for taking in user input, passing it
 Things to note about server.js:
     - uses exec() to run curl commands, not sure if there is a more elegant way but this works for now
     - has a separate app.post() for each potential action (e.g. get new user code, login to Cerner, etc.)
-    - uses Express.js (which admittedly I'm not too familiar with yet -- I'm just using its functionality)
+    - uses Express.js (which admittedly I'm not familiar with yet -- I'm just using its functionality)
     - able to create new users, get new codes for existing users, and connect to the Cerner health system
     - does not yet truly handle errors
 Things to note about index.html:
