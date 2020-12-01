@@ -3,21 +3,47 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <body>
+    <input type="text" placeholder="new user" id="nameInput">
+    <button type="submit" id="nameSubmit">create new user</button>
+    <p id="nameEcho">Result</p>
+    <br>
     <input type="text" placeholder="user id" id="idInput">
     <button type="submit" id="idSubmit">get new code</button>
-    <p id="idEcho">ID Echo: </p>
-    <br><br>
+    <p id="idEcho">Result </p>
+    <br>
     <input type="text" placeholder="code" id="codeInput">
     <button type="submit" id="codeSubmit">get auth tokens</button>
-    <!-- <p id="codeEcho">Code Echo: </p> -->
+    <p id="codeEcho"></p> 
 </body>
 
 <script> 
 
+    document.getElementById('nameSubmit').onclick = function() {
+        console.log("name submit");
+        var toSend = JSON.stringify({id: document.querySelector('#nameInput').value});
+        console.log(toSend);
+        $.ajax({
+            url: 'http://localhost:3000/createUser',
+            type: 'POST',
+            data: toSend,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: (data, textStatus, jqXHR) => {
+                if (data.success) {
+                    console.log("New user: " + data.app_user_id + " / code: " + data.code);
+                    document.querySelector('#nameEcho').innerHTML = data.app_user_id + ", " + data.code;
+                } else {
+                    console.log("failed to create new user");
+                    document.querySelector('#nameEcho').innerHTML = data.error;
+                }
+            }
+        })
+    }
+
     document.getElementById('idSubmit').onclick = function() {
         console.log("id submit");
-        var toSend = JSON.stringify({id: document.querySelector('#idInput').value})
-        console.log(toSend)
+        var toSend = JSON.stringify({id: document.querySelector('#idInput').value});
+        console.log(toSend);
         $.ajax({
             url: 'http://localhost:3000/newUserCode',
             type: 'POST',
@@ -25,16 +51,21 @@
             dataType: 'json',
             contentType: 'application/json',
             success: (data, textStatus, jqXHR) => {
-                console.log("New code generated" + data.code);
-                document.querySelector('#idEcho').innerHTML = data.code;
+                if (data.success) {
+                    console.log("New code generated: " + data.code);
+                    document.querySelector('#idEcho').innerHTML = data.code;
+                } else {
+                    console.log("Invalid username given");
+                    document.querySelector('#idEcho').innerHTML = data.error;
+                }
             }
-        })
+        });
     }
 
     document.getElementById('codeSubmit').onclick = function() {
         console.log("code submit");
-        var toSend = JSON.stringify({code: document.querySelector('#codeInput').value})
-        console.log(toSend)
+        var toSend = JSON.stringify({code: document.querySelector('#codeInput').value});
+        console.log(toSend);
         $.ajax({
             url: 'http://localhost:3000/getAuthTokens',
             type: 'POST',
@@ -42,12 +73,14 @@
             dataType: 'json',
             contentType: 'application/json',
             success: (data, textStatus, jqXHR) => {
-                if (typeof data.redirectURL == 'string') {
+                if (data.redirectURL != undefined) {
                     console.log(data.redirectURL)
                     window.location = data.redirectURL;
+                } else {
+                    document.querySelector('#codeEcho').innerHTML = data.failure;
                 }
             }
-        })
+        });
     }
 
 </script>
