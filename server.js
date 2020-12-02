@@ -1,5 +1,6 @@
 const express = require("express");
 const { exec } = require("child_process");
+const { parse } = require("path");
 
 const clientID = "8c5d94b357db43f3a25b378144c01073";
 const clientSecret = "m2cDmbw5BLA64FNTFXwa007rdxSNYsbc";
@@ -28,7 +29,7 @@ app.post("/createUser", function(req, res) {
             // }
         }
     });
-})
+});
 
 // Creating a new user code for an existing user. Takes in an id in JSON form and requests
 // a new user code via 1up's user API. Sends back the data received, incl. the new user code.
@@ -48,8 +49,8 @@ app.post("/newUserCode", function(req, res) {
             //     res.send({failure: "invalid username"});
             // }
         }
-    })
-})
+    });
+});
 
 // Redirecting the user to the Cerner Health test system. Takes in a user code in JSON format,
 // trades that code for an access token via 1up OAuth API, and uses the token to populate a
@@ -64,14 +65,26 @@ app.post("/getAuthTokens", function(req, res) {
             const parsedResult = JSON.parse(result);
             if (parsedResult.access_token !== undefined) {
                 const cernerCode = 4707;
-                const accessToken = parsedResult.access_token;
-                let loginURL = `https://quick.1up.health/connect/${cernerCode}?access_token=${accessToken}`
-                res.send({redirectURL: loginURL});
+                const token = parsedResult.access_token;
+                console.log(token);
+                let loginURL = `https://quick.1up.health/connect/${cernerCode}?access_token=${token}`
+                res.send({redirectURL: loginURL, accessToken: token});
             } else {
                 res.send({failure: "invalid user code"});
             }
         }
-    })
+    });
+});
+
+app.post("/everything", function(req, res) {
+    let accessToken = req.body.accessToken;
+    exec(`curl -X GET 'https://api.1up.health/fhir/dstu2/Patient' -H "Authorization: Bearer ${accessToken}"`,
+    (error, result) => {
+        const parsedResult = JSON.parse(result);
+        console.log(parsedResult);
+        // console.log(result);
+        // res.send(result);
+    });
 })
 
 // node is always listening. always. there is no escape

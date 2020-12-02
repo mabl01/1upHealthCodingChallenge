@@ -14,9 +14,15 @@
     <input type="text" placeholder="code" id="codeInput">
     <button type="submit" id="codeSubmit">get auth tokens</button>
     <p id="codeEcho"></p> 
+    <br>
+    <h3>This section is for post-login</h3>
+    <button type="submit" id="everything">get everything</button>
+    <p id="everythingEcho"></p>
 </body>
 
 <script> 
+
+    var accessToken = "";
 
     document.getElementById('nameSubmit').onclick = function() {
         console.log("name submit");
@@ -74,11 +80,26 @@
             contentType: 'application/json',
             success: (data, textStatus, jqXHR) => {
                 if (data.redirectURL != undefined) {
+                    accessToken = data.accessToken;
                     console.log(data.redirectURL)
                     window.location = data.redirectURL;
                 } else {
                     document.querySelector('#codeEcho').innerHTML = data.failure;
                 }
+            }
+        });
+    }
+
+    document.getElementById('everything').onclick = function() {
+        var toSend = JSON.stringify({accessToken: accessToken});
+        $.ajax({
+            url: 'http://localhost:3000/everything',
+            type: 'POST',
+            data: toSend,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: (data, textStatus, jqXHR) => {
+                document.querySelector('#everythingEcho').innerHTML = data;
             }
         });
     }
