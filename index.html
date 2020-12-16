@@ -81,7 +81,9 @@
             success: (data, textStatus, jqXHR) => {
                 if (data.redirectURL != undefined) {
                     accessToken = data.accessToken;
-                    console.log(data.redirectURL)
+                    // console.log(data.redirectURL)
+                    // console.log(data.accessToken);
+                    // console.log(accessToken);
                     window.location = data.redirectURL;
                 } else {
                     document.querySelector('#codeEcho').innerHTML = data.failure;
@@ -91,7 +93,7 @@
     }
 
     document.getElementById('everything').onclick = function() {
-        var toSend = JSON.stringify({accessToken: accessToken});
+        var toSend = JSON.stringify({accessToken: accessToken})
         $.ajax({
             url: 'http://localhost:3000/everything',
             type: 'POST',
