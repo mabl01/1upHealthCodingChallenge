@@ -101,7 +101,7 @@
             dataType: 'json',
             contentType: 'application/json',
             success: (data, textStatus, jqXHR) => {
-                document.querySelector('#everythingEcho').innerHTML = data;
+                document.querySelector('#everythingEcho').innerHTML = data.pID;
             }
         });
     }

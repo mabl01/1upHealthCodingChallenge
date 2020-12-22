@@ -40,9 +40,7 @@ app.post("/newUserCode", function(req, res) {
     let userID = req.body.id;
     exec(`curl -X POST "https://api.1up.health/user-management/v1/user/auth-code" -d "app_user_id=${userID}" -d "client_id=${clientID}" -d "client_secret=${clientSecret}"`,
     (error, stdout, stderr) => {
-        if (error) {
-            console.log(error)
-        } else {
+        if (error) {console.log(error);} else {
             const parsedResult = JSON.parse(stdout);
             res.send(parsedResult);
             // if (parsedResult.code != undefined) {
@@ -62,16 +60,15 @@ app.post("/getAuthTokens", function(req, res) {
     let code = req.body.code
     exec(`curl -X POST "https://api.1up.health/fhir/oauth2/token" -d "client_id=${clientID}" -d "client_secret=${clientSecret}" -d "code=${code}" -d "grant_type=authorization_code"`,
     (error, stdout, stderr) => {
-        if (error) {
-            console.log(error);
-        } else {
+        if (error) {console.log(error);} 
+        else {
             console.log(stdout);
             const parsedResult = JSON.parse(stdout);
             if (parsedResult.access_token !== undefined) {
                 const cernerCode = 4707;
                 const token = parsedResult.access_token;
                 accessToken = token;
-                let loginURL = `https://quick.1up.health/connect/${cernerCode}?access_token=${token}`
+                let loginURL = `https://api.1up.health/connect/system/clinical/${cernerCode}?client_id=${clientID}&access_token=${token}`;
                 res.send({redirectURL: loginURL, accessToken: token});
             } else {
                 res.send({failure: "invalid user code"});
@@ -84,14 +81,21 @@ app.post("/everything", function(req, res) {
     const token = accessToken;
     exec(`curl -X GET "https://api.1up.health/fhir/dstu2/Patient" -H "Authorization: Bearer ${token}"`,
     (error, stdout, stderr) => {
-        if (error) {
-            console.log(error);
-        }
+        if (error) {console.log(error);}
+        const urlPrefix = "https://api.1up.health/dstu2/Patient/";
         const parsedResult = JSON.parse(stdout);
-        fs.writeFileSync("result.txt", stdout)
-        console.log(stdout);
-        // console.log(stdout);
-        res.send(stdout);
+        const patientUrl = parsedResult.entry[0].fullUrl;
+        const patientID = patientUrl.substring(urlPrefix.length);
+
+        exec(`curl -X GET "https://api.1up.health/fhir/dstu2/Patient/${patientID}/$everything" -H "Authorization: Bearer ${token}"`,
+        (error, stdout, stderr) => {
+            if (error) {console.log(error);}
+            else {
+                console.log(stdout);
+            }
+        });
+
+        res.send({pID: patientID});
     });
 })
 
