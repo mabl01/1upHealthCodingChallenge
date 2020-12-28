@@ -91,11 +91,18 @@ app.post("/everything", function(req, res) {
         (error, stdout, stderr) => {
             if (error) {console.log(error);}
             else {
-                console.log(stdout);
+                const everything = JSON.parse(stdout);
+
+                var allData = "";
+                everything.entry.forEach(element => {
+                    allData += element.resource.text.div;
+                    allData += `<div><p>----------------------------</p></div>`
+                });
+
+                console.log(allData);
+                res.send({pID: patientID, all: allData});
             }
         });
-
-        res.send({pID: patientID});
     });
 })
 
