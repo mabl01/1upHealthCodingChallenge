@@ -1,7 +1,5 @@
 const express = require("express");
-const fs = require("fs");
 const { exec } = require("child_process");
-const { parse } = require("path");
 
 const clientID = "8c5d94b357db43f3a25b378144c01073";
 const clientSecret = "m2cDmbw5BLA64FNTFXwa007rdxSNYsbc";
@@ -24,12 +22,6 @@ app.post("/createUser", function(req, res) {
         } else {
             const parsedResult = JSON.parse(stdout);
             res.send(parsedResult);
-            // if (parsedResult.success == "true") {
-            //     res.send(parsedResult);
-            // } else {
-            //     console.log(parsedResult);
-            //     res.send({failure: "invalid"});
-            // }
         }
     });
 });
@@ -43,12 +35,6 @@ app.post("/newUserCode", function(req, res) {
         if (error) {console.log(error);} else {
             const parsedResult = JSON.parse(stdout);
             res.send(parsedResult);
-            // if (parsedResult.code != undefined) {
-            //     res.send(parsedResult);
-            // } else {
-            //     console.log(parsedResult);
-            //     res.send({failure: "invalid username"});
-            // }
         }
     });
 });
@@ -77,7 +63,7 @@ app.post("/getAuthTokens", function(req, res) {
     });
 });
 
-app.post("/everything", function(req, res) {
+app.get("/everything", function(req, res) {
     const token = accessToken;
     exec(`curl -X GET "https://api.1up.health/fhir/dstu2/Patient" -H "Authorization: Bearer ${token}"`,
     (error, stdout, stderr) => {

@@ -1,5 +1,12 @@
 HOW TO USE:
-tba
+First, run server.js and navigate to localhost:3000. There are three text boxes and a "get everything" button.
+If you do not have a user or want a new user, use the first text box (new user) and submit a username. Once you
+have a user you'd like to use, enter the username in the second text box (user id) and submit it to receive a
+user code (it will echo below the text box). Copy and paste that code into the third text box (code) and submit
+it to be redirected via 1upHealth connect to Cerner login. Login to the test user (wilmasmart, Cerner01). You will
+then be redirected to the app again, and now that you've logged in you may click the "get everything" button to 
+retrieve this user's (wilma's) full medical data. It is presented in human-readable format using the patient's
+resources' text fields within the returned JSON.
 
 PRE-GIT REVISION HISTORY AND NOTES:
 I admittedly made the mistake of getting ahead of myself and not documenting my code on Git.

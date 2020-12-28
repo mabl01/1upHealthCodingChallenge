@@ -12,7 +12,7 @@
     <p id="idEcho">Result </p>
     <br>
     <input type="text" placeholder="code" id="codeInput">
-    <button type="submit" id="codeSubmit">get auth tokens</button>
+    <button type="submit" id="codeSubmit">login via connect</button>
     <p id="codeEcho"></p> 
     <br>
     <h3>This section is for post-login</h3>
@@ -21,8 +21,6 @@
 </body>
 
 <script> 
-
-    var accessToken = "";
 
     document.getElementById('nameSubmit').onclick = function() {
         console.log("name submit");
@@ -90,11 +88,9 @@
     }
 
     document.getElementById('everything').onclick = function() {
-        var toSend = JSON.stringify({accessToken: accessToken})
         $.ajax({
             url: 'http://localhost:3000/everything',
-            type: 'POST',
-            data: toSend,
+            type: 'GET',
             dataType: 'json',
             contentType: 'application/json',
             success: (data, textStatus, jqXHR) => {
